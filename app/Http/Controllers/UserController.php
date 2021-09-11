@@ -13,22 +13,35 @@ class UserController extends Controller
 
     public function updatePass(Request $request)
     {
-        $table = user::where("email",$request["email"])->update(['password' => md5($request['password'])]);
-        if ($table) {
-            echo md5($request['password']);
-        }else{
-            echo "Update Err";
+        $table = user::where([['email','=',$request->email],['password','=',md5($request->password)]])->get();
+
+        if ($table ->count() > 0){
+            $table = user::where("email",$request["email"])->update(['password' => md5($request['newPassword'])]);
+            return $this->respondWithJson(null,0,200,"Successfully");
         }
+
+        return $this->respondWithJson(null,0,300,"Incorrect password");
     }
 
     public function updateUser(Request $request){
 
         $table = user::where("id",$request['id'])->update(['name'=>$request['name'],'email'=>$request['email'],'phone'=>$request['phone'],'age'=>$request['age'],'gender'=>$request['gender']]);
         if($table){
-            echo "Successfully";
-        }else{
-            echo "Err update";
+             $table = user::where("id",$request['id'])->get();
+           return $this->respondWithJson($table,0,200,"Successfully");
         }
+
+        return $this->respondWithJson(null,0,500,"Unable to update account, please try again later");
+    }
+
+
+       public function newPassword(Request $request)
+    {
+        $table = user::where("email",$request["email"])->update(['password' => md5($request['password'])]);
+        if ($table) {
+             return $this->respondWithJson(null,0,200,"Successfully");
+        }
+         return $this->respondWithJson(null,0,300,"Incorrect email");
     }
 
 

@@ -15,11 +15,13 @@ Route::group(['prefix'=>'User'],function(){
 
 	Route::post('login','UserController@login')->name('login');
 
-	Route::post('updatePass','UserController@updatePass');
+	Route::put('updatePass','UserController@updatePass');
 
 	Route::post('updateUser','UserController@updateUser');
 
 	Route::post('checkEmail','UserController@checkEmail');
+
+	Route::put('newPassword','UserController@newPassword');
 
 });
 
