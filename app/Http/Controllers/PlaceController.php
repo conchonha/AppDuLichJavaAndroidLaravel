@@ -8,6 +8,11 @@ use App\evaluate;
 
 class PlaceController extends Controller
 {
+	public function getPlaceFromName(Request $request){
+		$table = place::where('place.name',$request->name)->get();
+		return $this->respondWithJson($table,$table->count());
+	}
+
 	public function getLatLngPlace(){
 		$table = place::select('place.name','place.image','place.introduce','place.lat','place.lng')->all();
 		return $this->respondWithJson($table,$table->count());
@@ -77,6 +82,11 @@ class PlaceController extends Controller
 		return $this->respondWithJson($table,$table->count());
 	}
 
+	public function getDataBanerRandom(){
+		$table = place::select('place.id','place.image')->orderBy('place.id','desc')->get()->random(5);
+		return $this->respondWithJson($table,$table->count());
+	}
+
 
 	public function respondWithJson($data,$total)
     {
@@ -97,7 +107,6 @@ class PlaceController extends Controller
             'totalEvaluate' =>$dataEvaluate->count(),
             'data' => $dataPlace,
             'dataEvaluate' => $dataEvaluate,
-            
         ]);
     }
     

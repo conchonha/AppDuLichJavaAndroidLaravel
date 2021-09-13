@@ -63,6 +63,10 @@ Route::group(['prefix'=>'Place'],function(){
 	Route::get('getLatLngPlace','PlaceController@getLatLngPlace');
 
 	Route::get('getDataPlaceIdMenu','PlaceController@getDataPlaceIdMenu');
+
+	Route::get('getDataBanerRandom','PlaceController@getDataBanerRandom');
+
+	Route::get('getPlaceFromName','PlaceController@getPlaceFromName');
 });
 
 //----------------------------INGREDIENT----------------------
