@@ -73,7 +73,7 @@ Route::group(['prefix'=>'Place'],function(){
 
 Route::group(['prefix'=>'Ingredient'],function(){
 
-	Route::get('getDataIngredientIdMenu/id_menu={id}','ingredientController@getData');	
+	Route::get('getMenuIngredientFromIdMenu/id_menu={id}','ingredientController@getMenuIngredientFromIdMenu');	
 
 });
 

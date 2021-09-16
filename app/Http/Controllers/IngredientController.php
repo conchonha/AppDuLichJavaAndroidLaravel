@@ -7,10 +7,9 @@ use App\ingredient;
 
 class IngredientController extends Controller
 {
-	public function getData($id){
+	public function getMenuIngredientFromIdMenu($id){
 		$table = ingredient::where('ingredient.id_menu','=',$id)->get();
 		if($table){
-			
 			return $this->respondWithJson($table,$table->count());
 		}
 	}
