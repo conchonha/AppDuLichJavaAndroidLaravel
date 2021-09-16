@@ -46,7 +46,10 @@ class PlaceController extends Controller
 		$test = $request->check;
 		$id = $request->id;
 		if($test == 0){
+
 			if($id != null){
+				$table;
+
 				$count = place::join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id_menu','=',$id)->count();
 				if($count > 7){
 					$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id_menu','=',$id)->get()->random(7);
@@ -54,18 +57,34 @@ class PlaceController extends Controller
 					$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id_menu','=',$id)->orderBy('ingredient.id','desc')->get();
 				}
 				
+				for ($i=0; $i < $table->count(); $i++) { 
+					$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
+					$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
+					$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
+					$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
+					$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
+					
+					$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
+					$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
+
+					$table[$i]->rating = $trungbinh;
+					$table[$i]->like = $like;
+				}
+
 				return $this->respondWithJson($table,$table->count());
 			}
 		}else{
 			if($id != null){
-				$count = place::join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->count();
-				if($count > 7){
-					$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->get()->random(7);
-				}else{
-					$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->orderBy('ingredient.id','desc')->get();
-				}
+				$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->get()->random(7);
+
+				// $count = place::join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->count();
+				// if($count > 7){
+				// 	$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->get()->random(7);
+				// }else{
+				// 	$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->orderBy('ingredient.id','desc')->get();
+				// }
 			
-				return $this->respondWithJson($table,$table->count());
+				//return $this->respondWithJson($table,$table->count());
 			}
 		}	
 	}
@@ -78,7 +97,7 @@ class PlaceController extends Controller
 	}
 
 	public function getDataImageHomeRandom(){
-		$table = place::select('place.id','place.image')->orderBy('place.id','desc')->get();
+		$table = place::select('place.id','place.image')->orderBy('place.id','desc')->get()->random(21);
 		return $this->respondWithJson($table,$table->count());
 	}
 
