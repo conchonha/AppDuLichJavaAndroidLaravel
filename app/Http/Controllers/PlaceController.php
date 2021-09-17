@@ -38,6 +38,8 @@ class PlaceController extends Controller
 
 
 			$evaluate = evaluate::select('evaluates.id','evaluates.id_user','evaluates.id_place','evaluates.comment','evaluates.rating','evaluates.like','evaluates.created_at','evaluates.updated_at','acount.name','acount.avatar')->join('acount','acount.id','=','evaluates.id_user')->where('evaluates.id_place',$id)->get();
+
+			$table = $this->responseDataWithEvalute($table);
 			return $this->respondWithJsonGetPlaceIdPlace($table,$evaluate);
 		}
 	}
@@ -57,19 +59,20 @@ class PlaceController extends Controller
 					$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id_menu','=',$id)->orderBy('ingredient.id','desc')->get();
 				}
 				
-				for ($i=0; $i < $table->count(); $i++) { 
-					$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
-					$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
-					$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
-					$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
-					$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
+				// for ($i=0; $i < $table->count(); $i++) { 
+				// 	$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
+				// 	$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
+				// 	$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
+				// 	$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
+				// 	$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
 					
-					$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
-					$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
+				// 	$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
+				// 	$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
 
-					$table[$i]->rating = $trungbinh;
-					$table[$i]->like = $like;
-				}
+				// 	$table[$i]->rating = $trungbinh;
+				// 	$table[$i]->like = $like;
+				// }
+				$table = $this->responseDataWithEvalute($table);
 
 				return $this->respondWithJson($table,$table->count());
 			}
@@ -84,20 +87,20 @@ class PlaceController extends Controller
 					$table = place::select('place.id','place.name','place.image')->join('ingredient','place.id_ingredient','=','ingredient.id')->where('ingredient.id','=',$id)->orderBy('ingredient.id','desc')->get();
 				}
 			
-				for ($i=0; $i < $table->count(); $i++) { 
-					$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
-					$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
-					$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
-					$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
-					$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
+				// for ($i=0; $i < $table->count(); $i++) { 
+				// 	$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
+				// 	$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
+				// 	$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
+				// 	$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
+				// 	$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
 					
-					$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
-					$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
+				// 	$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
+				// 	$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
 
-					$table[$i]->rating = $trungbinh;
-					$table[$i]->like = $like;
-				}
-
+				// 	$table[$i]->rating = $trungbinh;
+				// 	$table[$i]->like = $like;
+				// }
+				$table = $this->responseDataWithEvalute($table);
 				return $this->respondWithJson($table,$table->count());
 			}
 		}	
@@ -106,12 +109,31 @@ class PlaceController extends Controller
 	public function getDataPlaceIdIngredient(Request $request){
 		$id = $request->id;
 		$table = place::select('place.id','place.name','place.image','place.introduce')->where('place.id_ingredient','=',$id)->orderBy('place.id','desc')->get();
+//--------------------------------------------------------------------------------
+		// for ($i=0; $i < $table->count(); $i++) { 
+		// 			$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
+		// 			$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
+		// 			$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
+		// 			$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
+		// 			$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
+					
+		// 			$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
+		// 			$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
 
+		// 			$table[$i]->rating = $trungbinh;
+		// 			$table[$i]->like = $like;
+		// 		}
+		$table = $this->responseDataWithEvalute($table);
 		return $this->respondWithJson($table,$table->count());
 	}
 
 	public function getDataImageHomeRandom(){
 		$table = place::select('place.id','place.image')->orderBy('place.id','desc')->get()->random(21);
+		return $this->respondWithJson($table,$table->count());
+	}
+
+	public function getAllImagePlace(){
+		$table = place::select('place.id','place.image')->orderBy('place.id','desc')->get();
 		return $this->respondWithJson($table,$table->count());
 	}
 
@@ -141,6 +163,23 @@ class PlaceController extends Controller
             'data' => $dataPlace,
             'dataEvaluate' => $dataEvaluate,
         ]);
+    }
+
+    public function responseDataWithEvalute($table){
+			for ($i=0; $i < $table->count(); $i++) { 
+					$mot = evaluate::where([['id_place',$table[$i]->id],['rating',1]])->count();
+					$hai =  evaluate::where([['id_place',$table[$i]->id],['rating',2]])->count();
+					$ba =  evaluate::where([['id_place',$table[$i]->id],['rating',3]])->count();
+					$bon =  evaluate::where([['id_place',$table[$i]->id],['rating',4]])->count();
+					$nam =  evaluate::where([['id_place',$table[$i]->id],['rating',5]])->count();
+					
+					$trungbinh = (1*$mot + 2*$hai + 3*$ba + 4*$bon + 5*$nam) / (($mot+$hai+$ba+$bon+$nam) ?: 1);
+					$like = evaluate::where([['id_place',$table[$i]->id],['evaluates.like',1]])->sum('evaluates.like');
+
+					$table[$i]->rating = $trungbinh;
+					$table[$i]->like = $like;
+				}
+		return $table;
     }
     
 }

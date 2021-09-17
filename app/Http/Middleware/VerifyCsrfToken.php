@@ -12,7 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-    	'http://192.168.1.5/AppDuLichAndroidLaravel/public/*',
+    	'http://192.168.1.6/AppDuLichAndroidLaravel/public/*',
     ];
 }
 

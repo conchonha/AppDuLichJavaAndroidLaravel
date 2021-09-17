@@ -67,6 +67,8 @@ Route::group(['prefix'=>'Place'],function(){
 	Route::get('getDataBanerRandom','PlaceController@getDataBanerRandom');
 
 	Route::get('getPlaceFromName','PlaceController@getPlaceFromName');
+
+	Route::get('getAllImagePlace','PlaceController@getAllImagePlace');
 });
 
 //----------------------------INGREDIENT----------------------
